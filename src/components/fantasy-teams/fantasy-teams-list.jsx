@@ -18,7 +18,7 @@ const FantasyTeamsList = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
+        throw new Error(errorData.message || "Fetching data failed");
       }
       const data = await response.json();
       const fantasyTeams = data.teams;
@@ -38,25 +38,72 @@ const FantasyTeamsList = () => {
       <div>
         {" "}
         {/* teams div */}
-        <ul>
+        {/* ------------- LIST ------------- */}
+        <ul className="space-y-6">
           {fantasyTeams.map((team, index) => {
             const doublePointsDriver = team.f1Drivers.find(
               (driver) => driver.doublePoints
             );
+            const formattedName = `${doublePointsDriver.driverId.name.charAt(
+              0
+            )}. ${doublePointsDriver.driverId.surname.toUpperCase()}`;
             return (
               <li key={team._id || index}>
-                <div>
-                  {" "}
-                  {/* team div */}
-                  <h3>Team Number: {index + 1}</h3>
-                  <span>Fantasy Team Name: {team.fantasyTeamName}</span>
-                  <span>Budget Left: {team.remainingBudget}</span>
-                  <div>
-                    {" "}
-                    {/* driver with double points div. need to populate in backend to show pictures and stuff */}
-                    <h3>Double Points: {doublePointsDriver.driverSurname}</h3>
+                <div className="relative rounded-xl border border-gray-300 bg-white p-4 shadow-sm">
+                  {/* ── header ── */}
+                  <div className="mb-3 flex items-center justify-between">
+                    <span className="text-sm font-semibold text-gray-500">
+                      #{index + 1}
+                    </span>
+                    <h3 className="truncate text-lg font-bold text-gray-800">
+                      {team.fantasyTeamName}
+                    </h3>
                   </div>
-                  <Link to={`/fantasyTeams/view/${team._id}`}>View Team</Link>
+
+                  {/* ── double-points driver ── */}
+                  <div className="inline-block w-32 overflow-hidden rounded-lg border border-gray-300 bg-white text-center shadow">
+                    {/* image + 2× badge */}
+                    <div className="relative h-28 w-full">
+                      <img
+                        src={doublePointsDriver.driverId.imageUrl}
+                        alt={formattedName}
+                        className="h-full w-full object-cover"
+                      />
+
+                      <span className="absolute top-1 left-1 rounded-full bg-black/80 px-1.5 py-0.5 text-[10px] font-extrabold text-white ring-2 ring-white">
+                        2×
+                      </span>
+                    </div>
+
+                    {/* name + cost */}
+                    <div className="border-t border-gray-200 px-1.5 py-1">
+                      <p className="truncate text-[13px] font-semibold text-gray-900">
+                        {formattedName}
+                      </p>
+                      <p className="mt-0.5 text-[12px] font-medium text-gray-700">
+                        ${doublePointsDriver.driverId.driverCost} M
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* ── footer ── */}
+                  <div className="mt-4 flex items-center justify-between text-sm">
+                    {/* left side: budget */}
+                    <span className="font-medium text-gray-500">
+                      Budget&nbsp;left:&nbsp;
+                      <span className="font-semibold text-green-600">
+                        ${team.remainingBudget}&nbsp;M
+                      </span>
+                    </span>
+
+                    {/* right side: view button */}
+                    <Link
+                      to={`/fantasyTeams/view/${team._id}`}
+                      className="rounded-full bg-purple-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-purple-700"
+                    >
+                      View
+                    </Link>
+                  </div>
                 </div>
               </li>
             );

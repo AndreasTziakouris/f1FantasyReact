@@ -7,6 +7,7 @@ import Signup from "./components/auth/signup-form";
 import Layout from "./components/layout";
 import { ProtectedRoute, AdminRoute } from "./scripts/auth.jsx";
 import FantasyTeamsList from "./components/fantasy-teams/fantasy-teams-list.jsx";
+import FantasyTeamView from "./components/fantasy-teams/fantasy-team-view.jsx";
 import {
   BrowserRouter,
   Routes,
@@ -33,7 +34,7 @@ function App() {
             {/*only logged in users*/}
             <Route path="/fantasyTeams" element={<Outlet />}>
               <Route index element={<FantasyTeamsList />} />
-              <Route path="view/:teamId" element={<h1>Team View</h1>} />
+              <Route path="view/:teamId" element={<FantasyTeamView />} />
               <Route path="edit/:teamId" element={<h1>team builder</h1>} />
               <Route path="new-team" element={<h1>team builder</h1>} />
             </Route>

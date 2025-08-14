@@ -32,9 +32,6 @@ const FantasyTeamView = () => {
   useEffect(() => {
     fetchFantasyTeam();
   }, [teamId]);
-  useEffect(() => {
-    console.log("Updated fantasyTeam:", remainingM);
-  }, [fantasyTeam]);
   // ----------  helpers & derived values  ----------
   const BUDGET_CAP = 100;
   const remainingM = fantasyTeam ? fantasyTeam.remainingBudget : 0;
@@ -170,6 +167,7 @@ const FantasyTeamView = () => {
       </div>
       <Link
         to={`/fantasyTeams/edit/${teamId}`}
+        state={{ team: fantasyTeam }}
         className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded transition"
       >
         Edit Team

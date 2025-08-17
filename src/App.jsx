@@ -31,7 +31,7 @@ function App() {
 
         <Route element={<Layout />}>
           <Route element={<ProtectedRoute />}>
-            {" "}
+            <Route index element={<h1>home page</h1>} />{" "}
             {/*only logged in users*/}
             <Route path="/fantasyTeams" element={<Outlet />}>
               <Route index element={<FantasyTeamsList />} />
@@ -40,7 +40,10 @@ function App() {
                 path="edit/:teamId"
                 element={<FantasyTeamBuilder mode={"edit"} />}
               />
-              <Route path="new-team" element={<h1>team builder</h1>} />
+              <Route
+                path="new-team"
+                element={<FantasyTeamBuilder mode={"build"} />}
+              />
             </Route>
             <Route path="/fantasyLeagues" element={<Outlet />}>
               <Route index element={<h1>Leagues List</h1>} />

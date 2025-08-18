@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 const FantasyTeamView = () => {
@@ -37,7 +37,7 @@ const FantasyTeamView = () => {
   }, [teamId]);
   // ----------  helpers & derived values  ----------
   const BUDGET_CAP = 100;
-  const remainingM = fantasyTeam ? fantasyTeam.remainingBudget.toFixed(1) : 0;
+  const remainingM = Number(fantasyTeam?.remainingBudget || 0).toFixed(1);
   const usedM = 100 - remainingM;
   const usedPct = (usedM / BUDGET_CAP) * 100;
 
@@ -52,6 +52,27 @@ const FantasyTeamView = () => {
     ...Array(2).fill(null),
   ].slice(0, 2);
 
+  const normalizedHistory = useMemo(() => {
+    const rh = fantasyTeam?.raceHistory ?? [];
+    const byRound = Object.fromEntries(rh.map((r) => [r.roundNumber, r]));
+
+    return Array.from({ length: 24 }, (_, idx) => {
+      const round = idx + 1;
+      const rec = byRound[round] || null;
+      const createdAt = fantasyTeam?.createdAtGP ?? 1;
+      let status;
+      if (rec) status = "played"; // has data
+      else if (round < createdAt)
+        status = "not_created"; // team didn’t exist yet
+      else status = "no_entry"; // existed but no record
+      return {
+        roundNumber: round,
+        status, // 'played' | 'no_entry' | 'not_created'
+        record: rec, // null or { raceId, pointsEarned, roundNumber }
+      };
+    });
+  }, [fantasyTeam]);
+
   const placeholder = "https://via.placeholder.com/160x160.png?text=%20";
 
   // ----------  UI  ----------
@@ -62,7 +83,6 @@ const FantasyTeamView = () => {
       ) : (
         <>
           {/* cost-cap bar */}
-
           <div className="mb-6">
             <Link
               to={`/fantasyTeams`}
@@ -192,6 +212,48 @@ const FantasyTeamView = () => {
             Edit Team
           </Link>
           {apiError && <p className="mt-6 text-sm text-red-600">{apiError}</p>}
+          <div className="mt-8">
+            <h3 className="mb-4 text-lg font-semibold text-gray-800">
+              Race History
+            </h3>
+            <h3 className="mb-4 text-lg font-semibold text-gray-800">
+              Total Points: {fantasyTeam.totalPoints}
+            </h3>
+            <ul className="space-y-3">
+              {normalizedHistory.map(({ roundNumber, status, record }) => {
+                const circuit = record?.raceId?.circuitName ?? "";
+                const pts = record?.pointsEarned ?? 0;
+
+                let label;
+                if (status === "played") label = `${pts} pts`;
+                else if (status === "not_created")
+                  label = "Team not created yet";
+                else label = "No participation";
+
+                return (
+                  <li
+                    key={roundNumber}
+                    className="w-full rounded-lg border border-gray-300 bg-white p-4 shadow-sm flex flex-col"
+                  >
+                    <p className="font-semibold text-gray-800">
+                      Round {roundNumber} {circuit && `– ${circuit}`}
+                    </p>
+                    <p
+                      className={`text-sm ${
+                        status === "played"
+                          ? "text-green-600"
+                          : status === "not_created"
+                          ? "text-gray-500"
+                          : "text-red-500"
+                      }`}
+                    >
+                      {label}
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </>
       )}
     </div>

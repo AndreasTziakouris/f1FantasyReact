@@ -9,6 +9,7 @@ import { ProtectedRoute, AdminRoute } from "./scripts/auth.jsx";
 import FantasyTeamsList from "./components/fantasy-teams/fantasy-teams-list.jsx";
 import FantasyTeamView from "./components/fantasy-teams/fantasy-team-view.jsx";
 import FantasyTeamBuilder from "./components/fantasy-teams/fantasy-teams-builder.jsx";
+import FantasyLeaguesList from "./components/fantasy-leagues/fantasy-league-list.jsx";
 import {
   BrowserRouter,
   Routes,
@@ -46,7 +47,7 @@ function App() {
               />
             </Route>
             <Route path="/fantasyLeagues" element={<Outlet />}>
-              <Route index element={<h1>Leagues List</h1>} />
+              <Route index element={<FantasyLeaguesList />} />
               <Route path="view/:leagueId" element={<h1>League View</h1>} />
             </Route>
             <Route path="/help" element={<h1>FAQs, Points, etc.</h1>} />

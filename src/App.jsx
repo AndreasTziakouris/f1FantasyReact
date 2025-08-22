@@ -10,6 +10,8 @@ import FantasyTeamsList from "./components/fantasy-teams/fantasy-teams-list.jsx"
 import FantasyTeamView from "./components/fantasy-teams/fantasy-team-view.jsx";
 import FantasyTeamBuilder from "./components/fantasy-teams/fantasy-teams-builder.jsx";
 import FantasyLeaguesList from "./components/fantasy-leagues/fantasy-league-list.jsx";
+import FantasyLeagueView from "./components/fantasy-leagues/fantasy-league-view.jsx";
+import FaqsPoints from "./components/help/faqs-points.jsx";
 import {
   BrowserRouter,
   Routes,
@@ -48,9 +50,9 @@ function App() {
             </Route>
             <Route path="/fantasyLeagues" element={<Outlet />}>
               <Route index element={<FantasyLeaguesList />} />
-              <Route path="view/:leagueId" element={<h1>League View</h1>} />
+              <Route path="view/:leagueId" element={<FantasyLeagueView />} />
             </Route>
-            <Route path="/help" element={<h1>FAQs, Points, etc.</h1>} />
+            <Route path="/help" element={<FaqsPoints />} />
             <Route path="*" element={<h1>404: Page not found</h1>} />
           </Route>
         </Route>

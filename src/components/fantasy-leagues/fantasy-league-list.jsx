@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-
+import { Link } from "react-router-dom";
 const FantasyLeaguesList = () => {
   const [fantasyLeagues, setFantasyLeagues] = useState([]);
 
@@ -91,9 +91,12 @@ const FantasyLeaguesList = () => {
 
             <div className="p-4">
               <div className="mb-2 flex items-center justify-between">
-                <h3 className="truncate text-lg font-bold text-gray-800">
+                <Link
+                  to={"/fantasyLeagues/view/" + l.leagueId}
+                  className="truncate text-lg font-bold text-gray-800"
+                >
                   {l.leagueName}
-                </h3>
+                </Link>
                 <span
                   className={`text-xs font-semibold px-2 py-1 rounded-full ${
                     l.joined
